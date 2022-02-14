@@ -1,3 +1,5 @@
+import { DateTime } from '../luxon/src/luxon.js';
+
 class Application {
   constructor() {
     this.contactForm = document.querySelector('.book_form');
@@ -41,14 +43,15 @@ class Application {
     }
 
     window.setInterval((ref) => {
-      const currentdate = new Date();
-      ref.dateTime.innerHTML = `<p>${ref.monthMap[currentdate.getMonth()]} ${currentdate.getDate()}, ${currentdate.getFullYear()}. ${currentdate.getHours()}:${currentdate.getMinutes()}:${currentdate.getSeconds()}</p>`;
+      const currentdate = DateTime.now();
+      ref.dateTime.innerHTML = `<p>${ref.monthMap[currentdate.month]} ${currentdate.day}, ${currentdate.year}. ${currentdate.hour}:${currentdate.minute}:${currentdate.second}</p>`;
     }, 1000, this);
   }
 
-  intitializeDocument() {
+  intitializeDocument = () => {
     this.bookList.innerHTML = '';
-    for (let i = (this.booksArray.length - 1); i > -1; i -= 1) {
+    let i = (this.booksArray.length - 1);
+    this.booksArray.forEach(() => {
       let bgConst = '';
       if (i % 2 === 0) {
         bgConst = 'bg-color';
@@ -57,21 +60,22 @@ class Application {
       <p>${this.booksArray[i].title} by ${this.booksArray[i].author}</p>
       <button class="rem_button remove_button_${i}">remove</button>
       </div>`;
-    }
+      i -= 1;
+    }, i);
   }
 
-  removeBook(index) {
+  removeBook = (index) => {
     document.querySelector(`.remove_button_${index}`).addEventListener('click', (event) => {
       const tempbooksArray = [];
       const objectReference = event.currentTarget.ref;
-      for (let j = 0; j < objectReference.booksArray.length; j += 1) {
+      this.booksArray.forEach((element, j) => {
         if (j !== event.currentTarget.index) {
           tempbooksArray.push({
             title: objectReference.booksArray[j].title,
             author: objectReference.booksArray[j].author,
           });
         }
-      }
+      }, tempbooksArray, objectReference);
       objectReference.booksArray = tempbooksArray;
       localStorage.setItem('books', JSON.stringify(objectReference.booksArray));
       objectReference.intitializeDocument();
@@ -81,13 +85,15 @@ class Application {
     document.querySelector(`.remove_button_${index}`).ref = this;
   }
 
-  intitializeRemoveButtonEvents() {
-    for (let i = (this.booksArray.length - 1); i > -1; i -= 1) {
+  intitializeRemoveButtonEvents = () => {
+    let i = (this.booksArray.length - 1);
+    this.booksArray.forEach(() => {
       this.removeBook(i);
-    }
+      i -= 1;
+    }, i);
   }
 
-  addBook() {
+  addBook = () => {
     this.displayBookListSection();
     this.booksArray.push({ title: this.title.value, author: this.author.value });
     localStorage.setItem('books', JSON.stringify(this.booksArray));
@@ -97,24 +103,25 @@ class Application {
     this.intitializeRemoveButtonEvents();
   }
 
-  displayBookListSection() {
+  displayBookListSection = () => {
     this.bookListSection.classList.remove('vanish');
     this.addBookSection.classList.add('vanish');
     this.contactSection.classList.add('vanish');
   }
 
-  displayAddBookSection() {
+  displayAddBookSection = () => {
     this.bookListSection.classList.add('vanish');
     this.addBookSection.classList.remove('vanish');
     this.contactSection.classList.add('vanish');
   }
 
-  displayContactSection() {
+  displayContactSection = () => {
     this.bookListSection.classList.add('vanish');
     this.addBookSection.classList.add('vanish');
     this.contactSection.classList.remove('vanish');
   }
 }
+
 /* eslint-disable */
-const application = new Application();
+export { Application };
 /* eslint-enable */
