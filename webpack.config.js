@@ -4,10 +4,6 @@ const path = require('path');
 module.exports = {
   mode: 'production',
   entry: './src/index.js',
-  output: {
-    filename: 'core.js',
-    path: path.resolve(__dirname, 'dist'),
-  },
   module: {
     rules: [
       {
@@ -18,7 +14,11 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: path.resolve(__dirname, 'index.html'),
+      template: path.resolve(__dirname, 'src', 'index.html'),
     }),
   ],
+  output: {
+    filename: 'core.js',
+    path: path.resolve(__dirname),
+  },
 };
