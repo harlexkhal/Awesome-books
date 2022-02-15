@@ -44,7 +44,7 @@ class Application {
 
     window.setInterval((ref) => {
       const currentdate = DateTime.now();
-      ref.dateTime.innerHTML = `<p>${ref.monthMap[currentdate.month]} ${currentdate.day}, ${currentdate.year}. ${currentdate.hour}:${currentdate.minute}:${currentdate.second}</p>`;
+      ref.dateTime.innerHTML = `<p>${ref.monthMap[currentdate.month - 1]} ${currentdate.day}, ${currentdate.year}. ${currentdate.hour}:${currentdate.minute}:${currentdate.second}</p>`;
     }, 1000, this);
   }
 
